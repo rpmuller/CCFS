@@ -400,7 +400,9 @@ We see a few other boolean operators here, all of which which should be self-exp
 Particularly interesting is the 1 == 1.0 test, which is true, since even though the two objects are different data types (integer and floating point number), they have the same *value*. There is another boolean operator `is`, that tests whether two objects are the same object:
 
 ```python
-1 is 1.0
+a = 1
+b = 1.0
+a is b
 ```
 
 We can do boolean tests on lists as well:
@@ -619,9 +621,7 @@ print(x,y)
 
 Here we did two things with tuples you haven't seen before. First, we unpacked an object into a set of named variables using *tuple assignment*:
 
-```python
-name,x,y = obj
-```
+    name,x,y = obj
 
 We also returned multiple values (minx,miny), which were then assigned to two other variables (x,y), again by tuple assignment. This makes what would have been complicated code in C++ rather simple.
 
@@ -655,6 +655,7 @@ dict(Rick=46,Bob=86,Fred=20)
 The `len()` command works on both tuples and dictionaries:
 
 ```python
+t = ('Bob',0.0,21.0)
 len(t)
 ```
 
@@ -665,7 +666,13 @@ len(ages)
 ### Plotting with Matplotlib
 One of the things Jupyter notebooks lets you do is have plots in-lined
 
-We can generally understand trends in data by using a plotting program to chart it. Python has a wonderful plotting library called [Matplotlib](http://matplotlib.org). The IPython notebook interface we are using for these notes has that functionality built in.
+We can generally understand trends in data by using a plotting program to chart it. Python has a wonderful plotting library called [Matplotlib](http://matplotlib.org). The Jupyter notebook interface we are using for these notes has that functionality built in.
+
+To import matplotlib, do:
+
+```python
+from matplotlib import pyplot as plt
+```
 
 As an example, we have looked at two different functions, the Fibonacci function, and the factorial function, both of which grow faster than polynomially. Which one grows the fastest? Let's plot them. First, let's generate the Fibonacci sequence of length 20:
 
@@ -684,11 +691,11 @@ for i in range(10):
 Now we use the Matplotlib function `plot` to compare the two.
 
 ```python
-figsize(8,6)
-plot(facts,label="factorial")
-plot(fibs,label="Fibonacci")
-xlabel("n")
-legend()
+plt.plot(facts,label="factorial")
+plt.plot(fibs,label="Fibonacci")
+plt.xlabel("n")
+plt.legend()
+plt.title("Comparison of factorial and Fibonacci series")
 ```
 
 The factorial function grows much faster. In fact, you can't even see the Fibonacci sequence. It's not entirely surprising: a function where we multiply by n each iteration is bound to grow faster than one where we add (roughly) n each iteration.
@@ -696,10 +703,10 @@ The factorial function grows much faster. In fact, you can't even see the Fibona
 Let's plot these on a semilog plot so we can see them both a little more clearly:
 
 ```python
-semilogy(facts,label="factorial")
-semilogy(fibs,label="Fibonacci")
-xlabel("n")
-legend()
+plt.semilogy(facts,label="factorial")
+plt.semilogy(fibs,label="Fibonacci")
+plt.xlabel("n")
+plt.legend()
 ```
 
 There are many more things you can do with Matplotlib. We'll be looking at some of them in the sections to come. In the meantime, if you want an idea of the different things you can do, look at the Matplotlib [Gallery](http://matplotlib.org/gallery.html). Rob Johansson's IPython notebook [Introduction to Matplotlib](http://nbviewer.ipython.org/urls/raw.github.com/jrjohansson/scientific-python-lectures/master/Lecture-4-Matplotlib.ipynb) is also particularly good.
