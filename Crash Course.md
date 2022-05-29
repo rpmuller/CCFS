@@ -82,7 +82,7 @@ Many of the things I used to use a calculator for, I now use Python for:
 ```
 
 ```python
-(50-5*6)/4
+(50-5*6)/4 
 ```
 
 (If you're typing this into an IPython notebook, or otherwise using notebook file, you hit shift-Enter to evaluate a cell.)
