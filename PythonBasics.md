@@ -715,6 +715,9 @@ There are many more things you can do with Matplotlib. We'll be looking at some 
 
 ## Why CCFS Uses Only a Subset of Python
 
+
+Despite the [Zen of Python's](https://peps.python.org/pep-0020/) assurances that there should be only one way to do things, any programming language offers many different methods of storing data and operating on those data structures. This book will strive to produce the *simplest readable code*, which in general will mean eschewing many of the advanced language facilities like classes and decorators. The benefit to this choice is that the resulting understandable code will often be trivial to express in other languages as well, and we will supply versions of the modules produced here in other languages, and encourage users to explore (and return to us) choices in still more languages.
+
 ```python
 
 ```
