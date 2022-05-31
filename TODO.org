@@ -1,0 +1,11 @@
+* TODO for CCFS
+** General 
+- Implement a uniform way of accessing libraries: use prefix: plt.plot, np.array, etc.
+** Python
+- Cache/memoize as an example of speeding fib or factorial
+** Geometry
+- Plots
+- Fast neighbor list calculation
+** MM/MD
+** QChem
+** Graphics
