@@ -4,7 +4,7 @@
 ** Python
 - Cache/memoize as an example of speeding fib or factorial
 ** Geometry
-- Plots
+- Plots to visualize point clouds
 - Fast neighbor list calculation
 ** MM/MD
 ** QChem
