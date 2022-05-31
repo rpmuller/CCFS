@@ -108,6 +108,8 @@ pts = pointcube(20,10)
 pts # Convenient way to print out the return value
 ```
 
+**TODO: Illustration of points**
+
 Compute distances from the point of interest (at the origin) to this new set of points:
 
 ```python
@@ -122,6 +124,9 @@ Filter out the points close to the origin:
 ns = neighbors(ds,3)
 ns
 ```
+
+**TODO: Illustration of origin (red) and neighbors (blue)**
+
 
 ## Faster calculation of neighbor lists
 
@@ -149,6 +154,8 @@ Running `bounding_box` on our earlier point cloud gives predictable results:
 bounding_box(pts)
 ```
 
+**TODO: Illustration of bounding box**
+
 Once we know the limits of the point cloud, we can bin them into groups of points. We will have $N_x, N_y, N_z$ bins in each dimension, and use a function to determine the index of the bins in each dimension:
 
 ```python
@@ -157,6 +164,8 @@ def bin_index(x,xmin,xmax,Nx): return math.floor(Nx*(x-xmin)/(xmax-xmin))
 ```
 
 We can take a pass through the points and put them into bins. First, create a dictionary that creates references to each of the bins, and then put each point into the relevant bins.
+
+**TODO: Illustration of bins**
 
 ```python
 def bin_points(pts,Nx,Ny,Nz):
@@ -170,10 +179,63 @@ def bin_points(pts,Nx,Ny,Nz):
     return binned
 ```
 
-Compute neighbor lists
+**TODO: Compute neighbor lists**
 
 ## Representing atoms
 
+At the most basic level, atoms require a position in space and an identity to the atom, and can be simply created using a python tuple:
+
+```python
+def atom(atno,coord): (atno,coord)
+```
+
+There are instances when more information is required. It is often convenient to have *labels* for atoms in order to be able to refer to a specific atom in a sea of many atoms of the same type. Molecular mechanics programs often need to define an *atom type*, since often the force-field for a $sp^3$ C is generally defined to be different from an $sp^2$ C. Quantum mechanics programs often define *counterpoise* atoms for basis set corrections. We will skip these additional features until we need them.
+
+Rather than refer to the atomic number and the coordinate separately, we can either write helper functions to access these:
+
+```python
+def atno(atom): return atom[0]
+def coord(atom): return atom[1]
+```
+
+Alternately, we can use Python's
+[named tuples](https://docs.python.org/3.6/library/collections.html?highlight=namedtuple#collections.namedtuple)
+to refer to these fields directly:
+
+```python
+import collections
+Atom = collections.namedtuple('atom',('atno','coord')
+```
+
+`namedtuple` allows the atoms to be defined and the fields to be accessed via:
+
+```python
+at1 = Atom(6,coord(0,0,0))
+at1.atno, at1,coord
+```
+
+The routines for computing distances and binning points from the previous section can be trivially used for atomic coordinates. Often neighbor calculations make use of atomic-number-specific *atomic radii* to estimate when two atoms might be bonded.
+
+```python
+def bonded(at1,at2):
+    return distance(at1.coord,at2,coord) < Rb[at1.atno]+Rb[at2.atno]
+```
+
+Typical bond radii through Xe are below:
+
+```python
+Rb = [1.000, 1.200, 1.400, 1.820, 1.372, # Be, 4
+      0.795, 1.700, 1.550, 1.520, 1.470, # F,  9
+      1.540, 2.270, 1.730, 1.700, 2.100, # Si, 14
+      1.800, 1.800, 1.750, 1.880, 2.750, # K,  19
+      2.450, 1.370, 1.370, 1.370, 1.370, # Cr, 24
+      1.370, 1.456, 0.880, 0.690, 0.720, # Cu, 29
+      0.740, 1.370, 1.950, 1.850, 1.900, # Se, 34
+      1.850, 2.020, 1.580, 2.151, 1.801, # Y,  39
+      1.602, 1.468, 1.526, 1.360, 1.339, # Ru, 44
+      1.345, 1.376, 1.270, 1.424, 1.663, # In, 49
+      2.100, 2.050, 2.060, 1.980, 2.000] # Xe, 54
+```
 
 ## Computing Coulomb repulsion
 

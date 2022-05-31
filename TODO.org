@@ -3,9 +3,14 @@
 - Implement a uniform way of accessing libraries: use prefix: plt.plot, np.array, etc.
 ** Python
 - Cache/memoize as an example of speeding fib or factorial
+- Note on simple programming style. Use Norvig's Pytudes as an example.
 ** Geometry
-- Plots to visualize point clouds
-- Fast neighbor list calculation
+- [ ] Illustration of points
+- [ ] Illustration of origin (red) and neighbors (blue)
+- [ ] Illustration of bounding box
+- [ ] Illustration of bins
+- [ ] Compute neighbor lists  
+- [ ] Fast neighbor list calculation
 ** MM/MD
 ** QChem
 ** Graphics
