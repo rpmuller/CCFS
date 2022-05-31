@@ -28,7 +28,7 @@ def coord(x,y,z): return np.array([x,y,z],np.double)
 
 Double precision variables, 64-bit precision floating-point numbers, are the standard datatype for most scientific programming applications, and will be used throughout the rest of the course.
 
-
+## Distance
 `numpy` makes it easy to compute distances:
 
 ```python
@@ -44,8 +44,7 @@ We have not specified units for the distance function. If the xyz-coordinates co
 A rigorous *type system* can substantially reduce the ambiguity, often without reducing the polymorphism, but is beyond the scope of the current work.
 
 
-## Computing neighbor lists
-
+## Neighbor lists
 
 Many of the forces encountered in computational chemistry are *pairwise*, and computing distances to other atoms is a common operation.
 
@@ -85,7 +84,7 @@ def neighbors(distances,cutoff): return list(filter(lambda d: d<cutoff,distances
 You can decide for yourself what makes the simplest readable code; the author somewhat prefers the inline function.
 
 
-To show how these functions work, let's create a cube of atoms $10\times 10\times 10$ centered at the origin, using the `numpy` `rand` function:
+To show how these functions work, let's function to create a cube of atoms using the `numpy` `rand` function:
 
 ```python
 def pointcube(N,D):
@@ -96,10 +95,20 @@ def pointcube(N,D):
     return pts
 ```
 
+`pointcube` can be rewritten using list comprehensions to simplify:
+
+```python
+def pointcube(N,D): return [D*(np.random.rand(3)-0.5) for _ in range(N)]
+```
+
+We can use this function to create a $10\times 10\times 10$ cube of 20 points:
+
 ```python
 pts = pointcube(20,10)
 pts # Convenient way to print out the return value
 ```
+
+Compute distances from the point of interest (at the origin) to this new set of points:
 
 ```python
 origin = coord(0,0,0)
@@ -107,20 +116,65 @@ ds = distances(origin,pts)
 ds
 ```
 
+Filter out the points close to the origin:
+
 ```python
 ns = neighbors(ds,3)
 ns
 ```
 
+## Faster calculation of neighbor lists
+
+Computing neighbor lists for all $N$ points requires $N(N-1)/2$ distance evaluations, and can become expensive for calculations on millions of points. We can do this calculation more rapidly by first binning the atoms into cells, and then only looping over the cells that are nearby.
+
+We first want to determine the *bounding box* for the set of atoms which is the x, y, and z minimum and maximum coordinates. If we're using `pointcube` to generate the points this is trivial (and equal to $\pm D$ in each dimension). In general, however, the point cloud generated is more irregular, and finding the boundaries is important.
+
 ```python
-raise Exception("finish fast neighbor list calculation")
+def bounding_box(points,BIG=1_000_000):
+    xmin=ymin=zmin=BIG
+    xmax=ymax=zmax=-BIG
+    for (x,y,z) in points: # automatically unpack the points into variabls
+        xmin = min(xmin,x)
+        xmax = max(xmax,x)
+        ymin = min(ymin,y)
+        ymax = max(ymax,y)
+        zmin = min(zmin,z)
+        zmax = max(zmax,z)
+    return xmin,xmax,ymin,ymax,zmin,zmax
 ```
+
+Running `bounding_box` on our earlier point cloud gives predictable results:
+
+```python
+bounding_box(pts)
+```
+
+Once we know the limits of the point cloud, we can bin them into groups of points. We will have $N_x, N_y, N_z$ bins in each dimension, and use a function to determine the index of the bins in each dimension:
+
+```python
+import math
+def bin_index(x,xmin,xmax,Nx): return math.floor(Nx*(x-xmin)/(xmax-xmin))
+```
+
+We can take a pass through the points and put them into bins. First, create a dictionary that creates references to each of the bins, and then put each point into the relevant bins.
+
+```python
+def bin_points(pts,Nx,Ny,Nz):
+    xmin,xmax,ymin,ymax,zmin,zmax = bounding_box(pts)
+    binned = {(I,J,K):[] for I in range Nx J in range Ny K in range Nz}
+    for pt in pts:
+        I = map(bin_index(pt[0],xmin,xmax,Nx)
+        J = map(bin_index(pt[1],ymin,ymax,Ny)
+        K = map(bin_index(pt[2],zmin,zmax,Nz)
+        binned[I,J,K].append(pt)
+    return binned
+```
+
+Compute neighbor lists
 
 ## Representing atoms
 
 
-## Fast methods of computing Coulomb repulsion
+## Computing Coulomb repulsion
 
-```python
 
-```
