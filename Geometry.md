@@ -194,8 +194,8 @@ There are instances when more information is required. It is often convenient to
 Rather than refer to the atomic number and the coordinate separately, we can either write helper functions to access these:
 
 ```python
-def atno(atom): return atom[0]
-def coord(atom): return atom[1]
+def atom_atno(atom): return atom[0]
+def atom_coord(atom): return atom[1]
 ```
 
 Alternately, we can use Python's
@@ -204,7 +204,7 @@ to refer to these fields directly:
 
 ```python
 import collections
-Atom = collections.namedtuple('atom',('atno','coord')
+Atom = collections.namedtuple('atom',('atno','coord'))
 ```
 
 `namedtuple` allows the atoms to be defined and the fields to be accessed via:
